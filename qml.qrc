@@ -1,0 +1,15 @@
+<RCC>
+    <qresource prefix="/">
+        <file>Image/Hero/Anduin.png</file>
+        <file>Image/Hero/Jaina.png</file>
+        <file>Image/UI/emptymana.jpg</file>
+        <file>Image/UI/fullmana.jpg</file>
+        <file>qml.qrc</file>
+        <file>Image/UI/deckback_1.jpg</file>
+        <file>Image/UI/deckback_2.jpg</file>
+        <file>main.qml</file>
+        <file>Image/Card/Argent_Squire</file>
+        <file>Image/UI/endturn.png</file>
+        <file>render.js</file>
+    </qresource>
+</RCC>
