@@ -1,11 +1,13 @@
 #include<player.h>
+#include<card.h>
+#include<minion.h>
 #include<QDebug>
 
 Player::Player(QList<Card*> *initdeck) {
     if(initdeck == NULL) {
         m_deck.clear();
         for(int i = 0; i < DECKNUM; i++) {
-            m_deck.append(new Card("Argent_Squire",1,"whole"));
+            m_deck.append(new Card(cardtable[0]));
         }
     } else {
         m_deck = *initdeck;
@@ -26,6 +28,10 @@ QList<Card*>& Player::deck(){
 
 QList<Card*>& Player::hand(){
     return m_hand;
+}
+
+QList<Minion*>& Player::minions(){
+    return m_minions;
 }
 
 Mana* Player::mana() {
@@ -59,13 +65,22 @@ void Player::drawCard(int number) {
     }
 }
 
-QString Player::chooseHand(int index) {
-    if(m_mana->full() <  m_hand[index]->cost() || choosedstatus() != "none")
-        return "false";
-    m_choosedstatus = "hand";
-    m_choosedindex = index;
-    m_promptstatus = m_hand[index]->choosed();
-    return m_hand[index]->choosed();
+bool Player::chooseHand(int index) {
+    if(m_mana->full() <  m_hand[index]->cost)
+        return false;
+    return true;
+}
+
+bool Player::playCard(Card *card, Player* enemy, QString targettype, Minion* target,int position) {
+    this->m_mana-=card->cost;
+    if(!card->checktarget(target))return false;
+    card->effect(this,enemy,card->name,targettype,target,position);
+    return true;
+}
+
+void Player::addMinion(int index, Minion *minion){
+    m_minions.insert(index,minion);
+    return;
 }
 
 void Player::cancelChoose(){

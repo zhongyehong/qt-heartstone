@@ -2,10 +2,12 @@
 #define MINION_H
 
 #include <definition.h>
-#include <card.h>
+#include <player.h>
+#include <qobject.h>
 #include <qstring.h>
 
-class Minion : public QObject {
+class Player;
+/*class Minion : public QObject {
     Q_OBJECT
 
 public:
@@ -31,6 +33,33 @@ private:
     QString m_choosed;
     int m_health;
 
+};*/
+
+class Minion: public QObject {
+    Q_OBJECT
+
+public:
+    int totalhealth;
+    int attack;
+    int curhealth;
+    QString name;
+
+    void (*deathrattle)(Player *myself, Player *enemy, int position);
+
+    void (*effect)(Player *myserlf, Player *enemy, int position);
+    Minion(int totalhealth, int attack, QString name,
+           void (*deathrattle)(Player *myself, Player *enemy, int position),
+           void (*effect)(Player *myserlf, Player *enemy, int position),
+           QObject *parent = NULL):
+        QObject(parent),totalhealth(totalhealth),attack(attack),curhealth(totalhealth),name(name),deathrattle(deathrattle),effect(effect){
+        }
 };
+
+
+extern std::vector<Minion> miniontable;
+
+void testdeathrattle(Player* myself, Player *enemy, int position);
+void testeffect(Player* myself, Player *enemy, int position);
+
 
 #endif // MINION_H

@@ -25,3 +25,14 @@ function cancelChoose() {
     wrapper.cancelChoose(1);
     chooseditem = "NULL";
 }
+
+
+function getname(hands,index) {
+    return 4;
+    //return hands[index];
+}
+
+function getlen(hands) {
+    return "1";
+    //return hands.length();
+}

@@ -1,7 +1,9 @@
-import QtQuick 2.5
+import QtQuick 2.3
 import QtQuick.Window 2.2
 //import Hearthstone.Mana 1.0
 import Hearthstone.Wrapper 1.0
+//import Hearthstone.QString 1.0
+import Hearthstone.Minion 1.0
 import Hearthstone.Card 1.0
 import "render.js" as Render
 
@@ -22,6 +24,11 @@ Window {
     property alias player2_battlefield: player2_battlefield
     property alias player1_mana: player1_mana
     property alias player2_mana: player2_mana
+    property bool focus: false
+    property bool choosed: false
+    property var currentFrame: undefined
+    property var currentCard: undefined
+
 
     Wrapper {
         id: wrapper
@@ -111,6 +118,54 @@ Window {
         width: 800
         height: 250
         color: "#ffffff"
+
+        Row{
+            spacing: 2
+            anchors.centerIn: parent
+
+            Repeater {
+                model: wrapper.player1_minions.length
+
+                Rectangle {
+                   id:minionFrame
+                   border.color: "black"
+                   border.width: 1
+                   width:80
+                   height:80
+
+                   Image {
+                        source: "Image/Card/" + wrapper.player1_minions[index].name
+                        width:50
+                        height:50
+                        anchors.centerIn: minionFrame
+                        MouseArea {
+                            anchors.fill: parent
+                            acceptedButtons: Qt.LeftButton | Qt.RightButton
+                           /* onClicked: {
+                                if(mouse.button == Qt.LeftButton){
+                                    cardFrame.x = cardFrame.x + mouseX - 25
+                                    cardFrame.y = cardFrame.y + mouseY - 25
+                                    hoverEnabled = true
+                                    parent.setFrameColor()
+                                } else if (mouse.button == Qt.RightButton) {
+                                    cardFrame.x = index*52
+                                    cardFrame.y = 0
+                                    hoverEnabled = false
+                                    parent.clearFrameColor()
+                                }
+                            }
+
+                            onPositionChanged: {
+                                cardFrame.x = cardFrame.x + mouseX - 25
+                                cardFrame.y = cardFrame.y + mouseY - 25
+                            }*/
+
+                        }
+                    }
+
+                }
+            }
+        }
     }
 
     Rectangle {
@@ -225,8 +280,74 @@ Window {
             Repeater {
                 model: wrapper.player1_hand.length
 
+                Rectangle {
+                   id:cardFrame
+                   border.color: "black"
+                   border.width: 1
+                   width:50
+                   height:50
 
-                Image {
+                   Image {
+                        id:image
+                        source: "Image/Card/" + wrapper.player1_hand[index].name
+                        width:50
+                        height:50
+                        anchors.centerIn: cardFrame
+                        MouseArea {
+                            anchors.fill: parent
+                            acceptedButtons: Qt.LeftButton | Qt.RightButton
+                            onClicked: {
+                                if(mouse.button == Qt.LeftButton){
+                                    if(choosed==false) {
+                                        if(1==1){//wrapper.chooseHand(1,index)) {
+                                            cardFrame.x = cardFrame.x + mouseX - 25
+                                            cardFrame.y = cardFrame.y + mouseY - 25
+                                            hoverEnabled = true
+                                            currentCard = wrapper.player1_hand[index]
+                                            parent.setFrameColor()
+                                            choosed=true
+                                        }
+                                    } else {
+                                        var lx = player1_battlefield.x
+                                        var rx = player1_battlefield.x + player1_battlefield.width
+                                        var uy = player1_battlefield.y
+                                        var dy = player1_battlefield.y + player1_battlefield.height
+                                        if(cardFrame.x+25>=lx && cardFrame.x+25<=rx && cardFrame.y+25>=uy && cardFrame.y+25<=dy) {
+                                            if(currentCard.target == "none") {
+
+                                            }
+                                        }
+                                    }
+                                } else if (mouse.button == Qt.RightButton) {
+                                    cardFrame.x = index*52
+                                    cardFrame.y = 0
+                                    hoverEnabled = false
+                                    parent.clearFrameColor()
+                                }
+                            }
+
+                            onPositionChanged: {
+                                cardFrame.x = cardFrame.x + mouseX - 25
+                                cardFrame.y = cardFrame.y + mouseY - 25
+                            }
+
+                        }
+                        function setFrameColor() {
+                            console.debug("in");
+                            if (currentFrame)
+                                currentFrame.border.color = "black";
+                            currentFrame = cardFrame;
+                            currentFrame.border.color = "red";
+                        }
+                        function clearFrameColor() {
+                            if (currentFrame)
+                                currentFrame.border.color = "black";
+                            currentFrame = undefined;
+                        }
+                    }
+
+                }
+                /*Image {
                     width: 50
                     height: 50
                     source: "Image/Card/" + wrapper.player1_hand[index].name
@@ -262,10 +383,11 @@ Window {
                             }
                         }
                     }
-                }
+                }*/
             }
         }
     }
+
 
     Rectangle {
         id: player2_hand
@@ -284,7 +406,7 @@ Window {
                 Image {
                     width: 50
                     height: 50
-                    source: "Image/Card/" + wrapper.player2_hand[index].name
+                    source: "Image/Card/" + wrapper.player2_hand[index]
                     scale: 1
 
                 }

@@ -1,4 +1,6 @@
 #include<wrapper.h>
+#include<minion.h>
+#include<card.h>
 
 Wrapper::Wrapper(QObject *parent)
     :QObject(parent){
@@ -6,14 +8,6 @@ Wrapper::Wrapper(QObject *parent)
     player[1] = new Player();
     player[2] = new Player();
     currentplayer = 1;
-}
-
-QQmlListProperty<Card> Wrapper::player1_deck(){
-    return QQmlListProperty<Card>(this,player[1]->deck());
-}
-
-QQmlListProperty<Card> Wrapper::player2_deck(){
-    return QQmlListProperty<Card>(this,player[2]->deck());
 }
 
 QQmlListProperty<Card> Wrapper::player1_hand(){
@@ -24,9 +18,9 @@ QQmlListProperty<Card> Wrapper::player2_hand(){
     return QQmlListProperty<Card>(this,player[2]->hand());
 }
 
+
 void Wrapper::drawCard(int curplayer,int number) {
     player[curplayer]->drawCard(number);
-    emit player_deckChanged();
     emit player_handChanged();
 }
 
@@ -35,6 +29,7 @@ void Wrapper::nextTurn() {
     player[nextplayer]->mana()->newturn();
     emit player_manaChanged();
     drawCard(nextplayer,1);
+    emit player_handChanged();
     currentplayer = nextplayer;
 }
 

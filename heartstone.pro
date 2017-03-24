@@ -9,7 +9,8 @@ SOURCES += main.cpp \
     player.cpp \
     wrapper.cpp \
     minion.cpp \
-    method.cpp
+    method.cpp \
+    definition.cpp
 
 RESOURCES += \
     qml.qrc
